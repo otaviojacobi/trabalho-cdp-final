@@ -72,33 +72,53 @@ class BPTree(object):
 			s += "\n"
 		return s
 
-	def getRange(self,lo, hi):
+	def getRange(self,lo, hi, dataflag = 0):
+		flaginverte = 0
 		if lo > hi:
 			lo,hi = hi,lo
+			flaginverte = 1
+
 		resultado = []
-		lo='0'+str(lo)
-		hi='0'+str(hi)
+		if dataflag == 0:
+		    aux=str(float(lo)).split('.', 1)
+		    aux[0].zfill(3)
+		    lo = aux[0] + aux[1]
+		    aux=str(float(hi)).split('.', 1)
+		    aux[0].zfill(3)
+		    hi = aux[0] + aux[1]
+		    #print(lo, hi)
+		if dataflag == 1:
+		    aux = str(lo).split('/', 2)
+		    lo = aux[2] + '/' + aux[1] + '/' + aux[0]
+		    aux = str(hi).split('/', 2)
+		    hi = aux[2] + '/' + aux[1] + '/' + aux[0]
 		lowleaf, lowindex = self.find_range(lo, 'low')
 		highleaf, highindex = self.find_range(hi, 'high')
 		if lowleaf == highleaf:
-			if highindex == 0 or lowindex is None:
-				return resultado
-			elif highindex == lowindex:
-				return resultado
-			else:
-				resultado = resultado + lowleaf._keys[lowindex:highindex]
-				return resultado
+		    if highindex == 0 or lowindex is None:
+		        return resultado
+		    elif highindex == lowindex:
+		        return resultado
+		    else:
+		        resultado = resultado + lowleaf._keys[lowindex:highindex]
+		        if flaginverte == 1:
+		            resultado.reverse()
+		        return resultado
 		if lowindex != 0:
-			resultado = resultado + lowleaf._keys[lowindex:]
-			lowleaf = lowleaf._next
+		    resultado = resultado + lowleaf._keys[lowindex:]
+		    lowleaf = lowleaf._next
 		if lowindex is None:
-			lowleaf = lowleaf._next
+		    lowleaf = lowleaf._next
 		while lowleaf != highleaf:
-			resultado = resultado + lowleaf._keys
-			lowleaf = lowleaf._next
+		    resultado = resultado + lowleaf._keys
+		    lowleaf = lowleaf._next
 		if lowleaf == highleaf:
-			resultado = resultado + lowleaf._keys[lowindex:highindex]
-			return resultado
+		    resultado = resultado + lowleaf._keys[lowindex:highindex]
+		    if flaginverte == 1:
+		        resultado.reverse()
+		    return resultado
+
+
 
 class BPTreeNode(object):
 	def __init__(self, keys, pointers, capacity):
