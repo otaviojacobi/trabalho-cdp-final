@@ -74,9 +74,6 @@ class BPTree(object):
 
 	def getRange(self, lo, hi, dataflag = 0):
 		flaginverte = 0
-		if lo > hi:
-			lo,hi = hi,lo
-			flaginverte = 1
 
 		resultado = []
 		if dataflag == 0:
@@ -87,14 +84,22 @@ class BPTree(object):
 		    aux=str(float(hi)).split('.', 1)
 		    aux[0] = aux[0].zfill(3)
 		    hi = aux[0] + '.' + aux[1]
+		    if lo > hi:
+		        lo,hi = hi,lo
+		        flaginverte = 1
 		    #print(hi)
 		if dataflag == 1:
 		    aux = str(lo).split('/', 2)
 		    lo = aux[2] + '/' + aux[1] + '/' + aux[0]
 		    aux = str(hi).split('/', 2)
 		    hi = aux[2] + '/' + aux[1] + '/' + aux[0]
+		    if lo > hi:
+		        lo,hi = hi,lo
+		        flaginverte = 1
 		lowleaf, lowindex = self.find_range(lo, 'low')
+		#print("oe", lowleaf)
 		highleaf, highindex = self.find_range(hi, 'high')
+		#print("eita", highleaf)
 		if lowleaf == highleaf:
 		    if highindex == 0 or lowindex is None:
 		        return resultado

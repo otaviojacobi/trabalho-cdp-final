@@ -159,12 +159,11 @@ def consulta3(pesquisa, lista_bplus, valorlow, valorhigh,quantidade=10,reversal=
             return listafinal[0:]
 
 
-# chuva, tempM, tempm, sol, umidade, vento, data = bpt.insere_from_file('d_dados_clr.csv')
-# bpluses=[chuva, tempM, tempm, sol, umidade, vento, data]
-#
-# dictionary=pickle.load(open('estacoes.dic','rb'))
-#
-# k=consulta3(3,bpluses,0,30,reversal=1)
+#chuva, tempM, tempm, sol, umidade, vento, data = bpt.insere_from_file('d_dados_clr.csv')
+#bpluses=[chuva, tempM, tempm, sol, umidade, vento, data]
+
+#k=consulta1(2,bpluses,'01/06/2015','12/11/2015',[1,1,1,0,0,0,0,0])
+#print(k)
 # i=0
 # for element in k:
 #     i=i+1
