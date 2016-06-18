@@ -15,7 +15,7 @@ centrooeste=['GO', 'MS', 'MT','DF']
 nordeste=['SE','RN','PI','PE','PB','MA','CE','BA','AL']
 norte=['AC','AM','AP','PA','RO','RR','TO']
 
-
+i=0
 for line in fopen:
     estacao=line.split('-')[0].strip(' ')
     estado=line.split(' ')[-1].strip('\n').strip(' ')
@@ -29,6 +29,8 @@ for line in fopen:
         brasil['nordeste'].append(estacao)
     elif estado in norte:
         brasil['norte'].append(estacao)
+    brasil[estacao]=line.split('-')[1].strip('\n').strip(' ')
 
+print(brasil)
 afile=open('estacoes.dic','wb')
 pickle.dump(brasil,afile)

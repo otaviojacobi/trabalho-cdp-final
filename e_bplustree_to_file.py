@@ -72,7 +72,7 @@ class BPTree(object):
 			s += "\n"
 		return s
 
-	def getRange(self,lo, hi, dataflag = 0):
+	def getRange(self, lo, hi, dataflag = 0):
 		flaginverte = 0
 		if lo > hi:
 			lo,hi = hi,lo
@@ -81,12 +81,13 @@ class BPTree(object):
 		resultado = []
 		if dataflag == 0:
 		    aux=str(float(lo)).split('.', 1)
-		    aux[0].zfill(3)
-		    lo = aux[0] + aux[1]
+		    aux[0] = aux[0].zfill(3)
+		    lo = aux[0] + '.' + aux[1]
+		    #print(lo)
 		    aux=str(float(hi)).split('.', 1)
-		    aux[0].zfill(3)
-		    hi = aux[0] + aux[1]
-		    #print(lo, hi)
+		    aux[0] = aux[0].zfill(3)
+		    hi = aux[0] + '.' + aux[1]
+		    #print(hi)
 		if dataflag == 1:
 		    aux = str(lo).split('/', 2)
 		    lo = aux[2] + '/' + aux[1] + '/' + aux[0]

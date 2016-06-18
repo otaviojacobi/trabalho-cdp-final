@@ -2,25 +2,33 @@ import e_bplustree_to_file as bpt
 import pickle
 
 
-def consulta1(valorordem, arvdata, valorlow, valorhigh, listaflags, reversal=0):
+def consulta1(valorordem, lista_bplus, valorlow, valorhigh, listaflags,reversal=0,quantidade=10):
     ''' As variáveis de parâmetro (estacao ~ vento) são todas booleanas
-    tipoconsulta é 1 (procura na data) ou 0 (procura em qualquer outra)
-    valorordem é qual o valor é usado para ordenamento na busca de range para datas:
-    0 : num de estacao
-    1 : data (nunca será no tipo 1)
-    2 : precipitacao
-    3 : TempMaxima
-    4 : TempMinima
-    5 : Insolacao
-    6 : Umidade Relativa Media
-    7 : Velocidade do Vento Media''
-    '''
+   tipoconsulta é 1 (procura na data) ou 0 (procura em qualquer outra)
+   valorordem é qual o valor é usado para ordenamento na busca de range para datas:
+   0 : num de estacao
+   1 : data (nunca será no tipo 1)
+   2 : precipitacao
+   3 : TempMaxima
+   4 : TempMinima
+   5 : Insolacao
+   6 : Umidade Relativa Media
+   7 : Velocidade do Vento Media''
+   '''
+
+    arvdata=lista_bplus[6]
     resultadobruto = arvdata.getRange(valorlow, valorhigh, 1)
     listaordenada = []
     if valorordem > 1:
         for res in resultadobruto:
             truevalor = valorordem - 1
             aux = res.split('$')[1].split(',')
+            aux[truevalor] = aux[truevalor].split('.', 1)
+            aux[truevalor][0] = aux[truevalor][0].zfill(3)
+            if len(aux[truevalor]) == 2:
+                aux[truevalor] = aux[truevalor][0] + '.' + aux[truevalor][1]
+            else:
+                aux[truevalor] = aux[truevalor][0]
             saida = aux[truevalor] +'!' + res
             listaordenada.append(saida)
         #print("1:", listaordenada)
@@ -42,11 +50,21 @@ def consulta1(valorordem, arvdata, valorlow, valorhigh, listaflags, reversal=0):
                 if listaflags[numero] == 1 and numero != 1:
                     umasaida.append(parametros[truenumber])
                     #print(umasaida)
-            if(umasaida[2]!=''):
+            if('' not in umasaida):
                 listasaida.append(umasaida)
         if reversal!=0:
             listasaida.reverse()
-        return listasaida
+
+        for elemento in listasaida:
+            var_aux_=elemento[0].split('/')
+            year,month,day =var_aux_[0],var_aux_[1],var_aux_[2]
+            elemento[0]='/'.join([day,month,year])
+
+        if quantidade != 4242:
+            return listasaida[0:quantidade]
+        else:
+            return listasaida[0:]
+
 
     if valorordem == 0:
         listaordenada = resultadobruto
@@ -64,37 +82,84 @@ def consulta1(valorordem, arvdata, valorlow, valorhigh, listaflags, reversal=0):
                     truenumber -= 1
                 if listaflags[numero] == 1 and numero != 1:
                     umasaida.append(parametros[truenumber])
-                if(umasaida[2]!=''):
+                if('' not in umasaida):
                     listasaida.append(umasaida)
 
         if reversal!=0:
             listasaida.reverse()
-        return listasaida
 
-def consulta2(pesquisa, lista_bplus, regiao,dictionary, quantidade, reversal=0):
-    resultadobruto=lista_bplus[pesquisa].getRange(0,999)
-    total=[]
-    for elemento in resultadobruto:
-        if elemento.split('$')[-1][0:5] in dictionary[regiao]:
-            total.append(elemento)
-    saida=[]
-    if reversal==0:
-        for num in range(quantidade):
-            saida.append(total[-1-num])
-    if reversal==1:
-        for num in range(quantidade):
-            saida.append(total[num])
+        for elemento in listasaida:
+            var_aux_=elemento[0].split('/')
+            year,month,day =var_aux_[0],var_aux_[1],var_aux_[2]
+            elemento[0]='/'.join([day,month,year])
 
-    print(saida)
+        if quantidade != 4242:
+            return listasaida[0:quantidade]
+        else:
+            return listasaida[0:]
 
-def consulta(tipoconsulta, valorordem, lista_bplus, valorlow, valorhigh, listaflags,dictionary,regiao,reversal=0):
-    if tipoconsulta==1:
-        return consulta1(valorordem, lista_bplus[6], valorlow, valorhigh, listaflags, reversal)
-    elif tipoconsulta==2:
-        consulta2(valordem,lista_bplus,regiao,dictionary)
+def consulta2(pesquisa, lista_bplus, regiao,dictionary, quantidade=10, reversal=0):
+    if regiao!='todas':
+        resultadobruto=lista_bplus[pesquisa].keys()
+        total=[]
+        for elemento in resultadobruto:
+            if elemento.split('$')[-1][0:5] in dictionary[regiao]:
+                total.append(elemento)
+        saida=[]
+        if reversal==0:
+            for num in range(quantidade):
+                saida.append(total[-1-num])
+        if reversal==1:
+            for num in range(quantidade):
+                saida.append(total[num])
 
-chuva, tempM, tempm, sol, umidade, vento, data = bpt.insere_from_file('d_dados_clr.csv')
-bpluses=[chuva, tempM, tempm, sol, umidade, vento, data]
+    else:
+        resultadobruto=lista_bplus[pesquisa].keys()
+        saida=[]
+        if reversal==0:
+            for num in range(quantidade):
+                saida.append(resultadobruto[-1-num])
+        if reversal==1:
+            for num in range(quantidade):
+                dsaida.append(resultadobruto[num])
 
-dictionary=pickle.load(open('estacoes.dic','rb'))
-consulta2(4,bpluses,'sul',dictionary,10,1)
+    listafinal = []
+    for resultado in saida:
+        listaaux=[]
+        newresult = resultado.split('$')
+        listaaux.append(newresult[1][5:])
+        listaaux.append(newresult[1][0:5])
+        listaaux.append(newresult[0])
+        listafinal.append(listaaux)
+    #print(listafinal)
+    return listafinal
+
+def consulta3(pesquisa, lista_bplus, valorlow, valorhigh,quantidade=10):
+    resultadobruto = lista_bplus[pesquisa].getRange(valorlow, valorhigh, 0)
+    #print(resultadobruto)
+    listafinal = []
+    for resultado in resultadobruto:
+        listaaux = []
+        newresult = resultado.split('$')
+        listaaux.append(newresult[1][5:])
+        listaaux.append(newresult[1][0:5])
+        listaaux.append(newresult[0])
+
+        listafinal.append(listaaux)
+
+    if quantidade != 4242:
+        return listasaida[0:quantidade]
+    else:
+        return listasaida[0:]
+
+# chuva, tempM, tempm, sol, umidade, vento, data = bpt.insere_from_file('d_dados_clr.csv')
+# bpluses=[chuva, tempM, tempm, sol, umidade, vento, data]
+#
+# dictionary=pickle.load(open('estacoes.dic','rb'))
+#
+# k=consulta1(3,bpluses,'21/12/2015','22/12/2015',[1,1,0,1,0,0,0,0])
+# i=0
+# for element in k:
+#     i=i+1
+#     print(element)
+# print(i)
