@@ -27,7 +27,10 @@ class BPTree(object):
 		return self._tree.find(key)
 
 	def find_range(self, key, dir):
-		return self._tree.find_range(key, dir)
+		if dir == 'high':
+			return self._tree.find_range(key + '*', dir)
+		else:
+			return self._tree.find_range(key, dir)
 
 	def num_nodes(self):
 		return self._tree.num_nodes()
@@ -97,10 +100,8 @@ class BPTree(object):
 		        lo,hi = hi,lo
 		        flaginverte = 1
 		lowleaf, lowindex = self.find_range(lo, 'low')
-		#print("oe", lowleaf)
 		highleaf, highindex = self.find_range(hi, 'high')
-		#print("eita", highleaf)
-		if lowleaf == highleaf:
+		if lowleaf == highleaf:	
 		    if highindex == 0 or lowindex is None:
 		        return resultado
 		    elif highindex == lowindex:
@@ -143,7 +144,7 @@ class BPTreeNode(object):
 		return self._pointers[bisect_right(self._keys, key)].find(key)
 
 	def find_range(self, key, dir):
-	    return self._pointers[bisect_right(self._keys, key)].find_range(key, dir)
+		return self._pointers[bisect_right(self._keys, key)].find_range(key, dir)
 
 	def insert_here(self, position, key, pointer): #inserting at node level
 		''' insert key, at 'position' and pointer at 'position+1'
