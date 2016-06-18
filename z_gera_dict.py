@@ -29,7 +29,7 @@ for line in fopen:
         brasil['nordeste'].append(estacao)
     elif estado in norte:
         brasil['norte'].append(estacao)
-    brasil[estacao]=line.split('-')[1].strip('\n').strip(' ')
+    brasil[estacao]=line.split('-')[1].strip('\n').strip('\r').strip(' ')
 
 print(brasil)
 afile=open('estacoes.dic','wb')

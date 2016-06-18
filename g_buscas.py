@@ -43,7 +43,7 @@ def consulta1(valorordem, lista_bplus, valorlow, valorhigh, listaflags,reversal=
             umasaida = []
             if listaflags[1] == 1:
                 umasaida.append(dataentrada)
-            for numero in range(0, 7):
+            for numero in range(8):
                 truenumber = numero
                 if numero > 1:
                     truenumber -= 1
@@ -76,7 +76,7 @@ def consulta1(valorordem, lista_bplus, valorlow, valorhigh, listaflags,reversal=
             umasaida = []
             if listaflags[1] == 1:
                 umasaida.append(dataentrada)
-            for numero in range(7):
+            for numero in range(8):
                 truenumber = numero
                 if numero > 1:
                     truenumber -= 1
@@ -134,7 +134,7 @@ def consulta2(pesquisa, lista_bplus, regiao,dictionary, quantidade=10, reversal=
     #print(listafinal)
     return listafinal
 
-def consulta3(pesquisa, lista_bplus, valorlow, valorhigh,quantidade=10):
+def consulta3(pesquisa, lista_bplus, valorlow, valorhigh,quantidade=10,reversal=0):
     resultadobruto = lista_bplus[pesquisa].getRange(valorlow, valorhigh, 0)
     #print(resultadobruto)
     listafinal = []
@@ -146,18 +146,25 @@ def consulta3(pesquisa, lista_bplus, valorlow, valorhigh,quantidade=10):
         listaaux.append(newresult[0])
 
         listafinal.append(listaaux)
+    #return listafinal
+    if reversal==1:
+        if quantidade != 4242:
+            return listafinal[0:quantidade]
+        else:
+            return listafinal[0:]
+    elif reversal==0:
+        if quantidade != 4242:
+            return listafinal[-quantidade-1:-1]
+        else:
+            return listafinal[0:]
 
-    if quantidade != 4242:
-        return listasaida[0:quantidade]
-    else:
-        return listasaida[0:]
 
 # chuva, tempM, tempm, sol, umidade, vento, data = bpt.insere_from_file('d_dados_clr.csv')
 # bpluses=[chuva, tempM, tempm, sol, umidade, vento, data]
 #
 # dictionary=pickle.load(open('estacoes.dic','rb'))
 #
-# k=consulta1(3,bpluses,'21/12/2015','22/12/2015',[1,1,0,1,0,0,0,0])
+# k=consulta3(3,bpluses,0,30,reversal=1)
 # i=0
 # for element in k:
 #     i=i+1
