@@ -14,6 +14,7 @@ import tkinter.scrolledtext as tkst
 def MainWindow(window):
 
     global lista_cb
+    global firstTime
     global radio_box
 
     #frame
@@ -173,8 +174,19 @@ def MainWindow(window):
     Sol.place(x=110, y=250)
     Umidade.place(x=110, y=280)
     Vento.place(x=110, y=310)
-
-
+    
+    if firstTime == 1:
+        consulta1.select()
+        fazConsulta(1)
+        consulta13.select()
+        fazFirst(5)
+        biggest.select()
+        mudaMENOR(12)
+        ent1.insert(0, "01/01/2015")
+        ent2.insert(0, "31/12/2015")
+        ent4.insert(0, "20")
+        load_bin()
+        firstTime = 0
     introFrame.mainloop()
 
 def mudaMENOR(valor):
@@ -249,9 +261,9 @@ def fazBusca(frame,window):
 
     # create the text area frame that will be called by other functions to show the result
     recTextArea = Frame(recFrame)
-    recTextArea.place(x=70, y=95, height=490, width=824)
+    recTextArea.place(x=70, y=95, height=490, width=834)
 
-    saida =  tkst.ScrolledText(recTextArea,undo=TRUE,width=115,height=32)
+    saida =  tkst.ScrolledText(recTextArea,undo=TRUE,width=125,height=32)
     saida.insert(INSERT,TABELAO)
     saida.place(x=0,y=0)
     #sada['state']=DISABLED
@@ -429,7 +441,7 @@ def load_file():
 def load_bin():
     try:
         global infos
-        _chuva, _tempM, _tempm, _sol, _umidade, _vento, _data = bpt.load_stuff(askopenfilename(title='Selecione o arquivo'))
+        _chuva, _tempM, _tempm, _sol, _umidade, _vento, _data = bpt.load_stuff(askopenfilename(title='Selecione o arquivo binario:'))
         infos = [_chuva, _tempM, _tempm, _sol, _umidade, _vento, _data]
         messagebox.showinfo("Criado", "Database Carregada com Exito !")
     except:
@@ -462,6 +474,7 @@ if __name__ == '__main__':
     radio_box=0
     amount=StringVar()
     saida_FINAL=[]
+    firstTime = 1
     #global consulta1
     consulta1_s=0
     lista_cb=[]
